@@ -8,8 +8,8 @@ $(document).ready(function () {
             url: '/delete-file',
             data: {file: value},
             success: function (msg) {
-                alert('to aqui mano (deleteFile)');
-                //loadFiles();
+                //alert('to aqui mano (deleteFile)');
+                loadFiles();
             }
         });
 
@@ -23,17 +23,18 @@ $(document).ready(function () {
             success: function (arrayFiles) {
 
                 $("#file-tables-tbody tr").remove();
-                
-                //link_to_asset('file/example.png');
 
                 $.each(arrayFiles, function (index, value) {
 
+                    var filePath = value ;
+                    filePath = filePath.split(".", 1);
+                    
                     var element = "<tr>\n\
                                         <th scope='row'>" + index + "</th>\n\
                                         <td colspan='3' >" + value + "</td>\n\
                                         <td>\n\
-                                            <a href='{{url('/file/"+value+"')}}' target='_blank' class='btn btn-primary'>Download</a>&nbsp&nbsp&nbsp\n\
-                                            <button type='button' value='element_" + value + "' onload=\"deleteFile('" + value + "')\" class='btn btn-danger'>Delete</button>\n\
+                                            <a href=\"\/download-file\/"+filePath+"\" target='_blank' class='btn btn-primary'>Download</a>&nbsp&nbsp&nbsp\n\
+                                            <button type='button' value='" + value + "' onload=\"deleteFile('" + value + "')\" class='btn btn-danger'>Delete</button>\n\
                                         </td>\n\
                                     </tr>";
 
@@ -45,17 +46,15 @@ $(document).ready(function () {
 
     loadFiles();
 
-    $("#file-tables-tbody ").delegate("td", "click", function (e) {
+    $('#file-tables-tbody').on('click', '.btn-danger', function (event) {
+        
+        event.preventDefault();
 
-       //var xicas = $(this).val();
+        var file = $(this).val();
 
-       //console.log($(this));
-        //deleteFile();
-
-        alert('ascascascasc');
+        deleteFile(file);
 
     });
-
 
     $("#download").click(function () {
 
@@ -67,7 +66,7 @@ $(document).ready(function () {
             url: '/save-file',
             data: {fileName: fileName, link: link},
             success: function (msg) {
-                alert(msg);
+                //alert(msg);
                 loadFiles();
             }
         });

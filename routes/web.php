@@ -16,15 +16,12 @@ use GuzzleHttp\Client;
 
 
 $router->get('/', function () use ($router) {
-
     return view('home', []);
 });
 
-$router->get('/download-file', function () use ($router) {
-    
-    $file = $request->input('file');
-    
-    $path = storage_path("files/$file");
+$router->get('/download-file/{file}', function ($file) use ($router) {
+       
+    $path = storage_path("app/files/$file.jpeg");
 
     return response()->download($path);
 });
@@ -33,7 +30,7 @@ $router->delete('/delete-file', function (Request $request) use ($router) {
 
     $file = $request->input('file');
     
-    if (!Storage::exists($fileName)) {
+    if (!Storage::exists($file)) {
         return 'File not found';
     }
     
